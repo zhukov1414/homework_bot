@@ -42,12 +42,14 @@ logger.addHandler(handler)
 def check_tokens(tokens):
     """Проверяет доступность переменных окружения."""
     tokens = (PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
-    for token in tokens:
+    for i, token in enumerate(tokens):
         if token is None:
             logging.critical('Критическая ошибка,'
-                             'нет токена, позовем нетранера')
-            raise SystemExit('Критическая ошибка')
+                             f'нет токена, {i+1} позовем нетранера')
+        if None in tokens:
+            raise SystemExit('Критическая ошибка: один или несколько токенов не заданы')
     return tokens
+
 
 
 def send_message(bot, message):
@@ -92,12 +94,16 @@ def check_response(response):
                         'от API не является списком словарей.')
     if not isinstance(homeworks, list):
         raise TypeError('В ответе от API приходит не словарь.')
+    if 'current_date' not in response.keys():
+        raise KeyError('Ответ от API не содержит ключа current_date.')
     return homeworks
 
 
 def parse_status(homework):
     """Извлекает состояние домашней работы."""
     if 'homework_name' not in homework:
+        raise KeyError('Ошибка: нет нужных ключей.')
+    if 'status' not in homework:
         raise KeyError('Ошибка: нет нужных ключей.')
     homework_status = homework['status']
     homework_name = homework['homework_name']
@@ -128,6 +134,7 @@ def main():
             else:
                 logging.debug('В ответе нет новых статусов.')
                 send_message(bot, 'В ответе нет новых статусов.')
+            timestamp = response['current_date']
         except (Exception, TypeError, KeyError, RequestException) as error:
             logger.exception('Произошло исключение: %s', error)
             message = f'Сбой в работе программы: {error}'
