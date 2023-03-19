@@ -47,9 +47,9 @@ def check_tokens(tokens):
             logging.critical('Критическая ошибка,'
                              f'нет токена, {i+1} позовем нетранера')
         if None in tokens:
-            raise SystemExit('Критическая ошибка: один или несколько токенов не заданы')
+            raise SystemExit('Критическая ошибка: один или'
+                             'несколько токенов не заданы')
     return tokens
-
 
 
 def send_message(bot, message):
