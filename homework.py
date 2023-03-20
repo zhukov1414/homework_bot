@@ -41,14 +41,14 @@ logger.addHandler(handler)
 
 def check_tokens(tokens):
     """Проверяет доступность переменных окружения."""
-    tokens = (PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
-    for i, token in enumerate(tokens):
-        if token is None:
+    tokens = {'PRACTICUM_TOKEN': PRACTICUM_TOKEN,
+              'TELEGRAM_TOKEN': TELEGRAM_TOKEN,
+              'TELEGRAM_CHAT_ID': TELEGRAM_CHAT_ID}
+    for token, value in tokens.items():
+        if value is None:
             logging.critical('Критическая ошибка,'
-                             f'нет токена, {i+1} позовем нетранера')
-        if None in tokens:
-            raise SystemExit('Критическая ошибка: один или'
-                             'несколько токенов не заданы')
+                             f'нет {token} позовем нетранера')
+            raise SystemExit()
     return tokens
 
 
@@ -119,7 +119,7 @@ def main():
     timestamp = int(time.time())
     initial_status = ''
     initial_error_message = ''
-    if None in check_tokens(1):
+    if not check_tokens(1):
         logging.error('Нет проверки токенов')
         sys.exit()
     while True:

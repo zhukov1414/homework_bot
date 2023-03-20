@@ -22,10 +22,31 @@ handler = RotatingFileHandler('my_logger.log', maxBytes=50000000,
 logger.addHandler(handler)
 
 def check_tokens(tokens):
-    tokens = (PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
-    for token in tokens:
+    """Проверяет доступность переменных окружения."""
+    tokens = {'PRACTICUM_TOKEN': PRACTICUM_TOKEN, 'TELEGRAM_TOKEN': TELEGRAM_TOKEN, 'TELEGRAM_CHAT_ID': TELEGRAM_CHAT_ID}
+    for token, value in tokens.items():
         print(token)
-        if token  is None:
-            raise SystemExit('Критическая ошибка')
-    return tokens
+        print(value)
+        if value is None:
+            logging.critical('Критическая ошибка,'
+                             f'нет {token} позовем нетранера')
+            sys.exit()
+    return token
 
+check_tokens(1)
+"""     tokens = (PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
+    for token in tokens:
+        if token is None:
+            logging.critical('Критическая ошибка,'
+                             'позовем нетранера')
+            raise TypeError('Нет нужных переменных')
+
+check_tokens(1) """
+
+
+"""     tokens = (PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID)
+    for token in tokens:
+        if token is None:
+            logging.critical('Критическая ошибка,'
+                             'позовем нетранера')
+            raise TypeError('Нет нужных переменных') """
