@@ -41,15 +41,19 @@ logger.addHandler(handler)
 
 def check_tokens(tokens):
     """Проверяет доступность переменных окружения."""
-    tokens = {'PRACTICUM_TOKEN': PRACTICUM_TOKEN,
-              'TELEGRAM_TOKEN': TELEGRAM_TOKEN,
-              'TELEGRAM_CHAT_ID': TELEGRAM_CHAT_ID}
+    tokens = ({'PRACTICUM_TOKEN': PRACTICUM_TOKEN,
+                'TELEGRAM_TOKEN': TELEGRAM_TOKEN,
+                'TELEGRAM_CHAT_ID': TELEGRAM_CHAT_ID})
+    missing_tokens = []
     for token, value in tokens.items():
         if not value:
-            logging.critical('Критическая ошибка,'
-                             f'нет {token} позовем нетранера')
-            raise SystemExit()
-    return tokens
+            missing_tokens.append(token)
+            logging.critical(f'Критическая ошибка, нет {token}')
+    if missing_tokens:
+        logging.critical('Не хватает следующих переменных в .env: ' + ', '.join(missing_tokens))
+        raise SystemExit()
+    return True
+
 
 
 def send_message(bot, message):
