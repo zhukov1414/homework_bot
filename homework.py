@@ -45,7 +45,7 @@ def check_tokens(tokens):
               'TELEGRAM_TOKEN': TELEGRAM_TOKEN,
               'TELEGRAM_CHAT_ID': TELEGRAM_CHAT_ID}
     for token, value in tokens.items():
-        if value is None:
+        if not value:
             logging.critical('Критическая ошибка,'
                              f'нет {token} позовем нетранера')
             raise SystemExit()
@@ -115,15 +115,15 @@ def parse_status(homework):
 
 def main():
     """Основная логика работы бота."""
-    bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    timestamp = int(time.time())
-    initial_status = ''
-    initial_error_message = ''
     if not check_tokens(1):
         logging.error('Нет проверки токенов')
         sys.exit()
     while True:
         try:
+            bot = telegram.Bot(token=TELEGRAM_TOKEN)
+            timestamp = int(time.time())
+            initial_status = ''
+            initial_error_message = ''
             response = get_api_answer(timestamp)
             checked_homework = check_response(response)
             if checked_homework:
